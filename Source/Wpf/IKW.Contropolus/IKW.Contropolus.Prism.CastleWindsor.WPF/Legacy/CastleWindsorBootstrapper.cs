@@ -16,6 +16,10 @@ using Prism.Regions.Behaviors;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
 {
+    using global::Prism.Ioc;
+    using global::Prism.Services.Dialogs;
+    using Ioc;
+
     /// <summary>
     /// Base class that provides a basic bootstrapping sequence that
     /// registers most of the Composite Application Library assets
@@ -25,6 +29,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
     /// This class must be overriden to provide application specific configuration.
     /// </remarks>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
+    [Obsolete("It is recommended to use the new PrismApplication as the app's base class. This will require updating the App.xaml and App.xaml.cs files.", false)]
     public abstract class CastleWindsorBootstrapper : Bootstrapper
     {
         private bool useDefaultConfiguration = true;
@@ -136,9 +141,14 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
             Container.Register(Component.For<ILoggerFacade>().Instance(Logger));
             Container.Register(Component.For<IModuleCatalog>().Instance(ModuleCatalog));
 
+
             if (useDefaultConfiguration)
             {
                 Container.Register(Component.For<IWindsorContainer>().Instance(Container));
+
+
+                RegisterTypeIfMissing(typeof(IDialogService), typeof(DialogService), true);
+                RegisterTypeIfMissing(typeof(IDialogWindow), typeof(DialogWindow), false);
 
                 RegisterTypeIfMissing(typeof(IServiceLocator), typeof(CastleWindsorServiceLocatorAdapter), true);
                 RegisterTypeIfMissing(typeof(IRegionNavigationContentLoader), typeof(CastleWindsorRegionNavigationContentLoader), true);
@@ -194,6 +204,11 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
         protected virtual IWindsorContainer CreateContainer()
         {
             return new WindsorContainer();
+        }
+
+        protected override IContainerExtension CreateContainerExtension()
+        {
+            return new CastleWindsorContainerExtension(Container);
         }
 
         /// <summary>

@@ -7,16 +7,18 @@ using Xunit;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 {
-    [Collection("ServiceLocator")]
-    public class UnityRegionNavigationContentLoaderFixture
-    {
-        IUnityContainer _container;
+    using Castle.Windsor;
+    using WPF.Legacy;
 
-        public UnityRegionNavigationContentLoaderFixture()
+    [Collection("ServiceLocator")]
+    public class CastleWindsorRegionNavigationContentLoaderFixture
+    {
+        IWindsorContainer _container;
+
+        public CastleWindsorRegionNavigationContentLoaderFixture()
         {
-            _container = new UnityContainer();
+            _container = new WindsorContainer();
             MockServiceLocator serviceLocator = new MockServiceLocator(_container);
-            ServiceLocator.SetLocatorProvider(() => serviceLocator);
         }
 
         [StaFact]

@@ -3,6 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Prism.CastleWindsor</PackageId>
+    <Authors>Tavi Truman</Authors>
+    <Company>InKnowWorks</Company>
+    <Product>IKW.Contropolus.Prism.CastleWindsor.WPF</Product>
+    <Description>IKW Customized IoC for Prism 7.x Famework - Contropolus</Description>
+    <PackageTags>prism;castlewindsor;mvvm;wpf;xaml</PackageTags>
+    <Version Condition=" '$(PRISM_UNITY_WPF_VERSION)' != '' ">$(PRISM_UNITY_WPF_VERSION)</Version>
   </PropertyGroup>
 
   <ItemGroup>

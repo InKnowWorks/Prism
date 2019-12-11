@@ -218,5 +218,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         {
             return Instance.Kernel.HasComponent(name);
         }
+
+
     }
 }

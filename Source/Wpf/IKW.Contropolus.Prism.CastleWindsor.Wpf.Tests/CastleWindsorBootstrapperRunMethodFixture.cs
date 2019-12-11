@@ -15,6 +15,10 @@ using Xunit;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 {
+    using global::Prism.Ioc;
+    using Regions;
+    using WPF.Ioc;
+
     [Collection("ServiceLocator")]
     public class CastleWindsorBootstrapperRunMethodFixture
     {
@@ -202,9 +206,10 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
             //    .Instance(Logger)
             //    .LifeStyle.Singleton);
 
-            mockedContainer.Verify(
-                container => container.Register(Component.For(typeof(ILoggerFacade)).Instance(bootstrapper.BaseLogger)
-                    .LifeStyle.Singleton), Times.Once());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(ILoggerFacade))
+                    .Instance(bootstrapper.BaseLogger)
+                    .LifeStyle.Singleton),
+                Times.Once());
 
             //mockedContainer.Verify(c => c.RegisterInstance(typeof(ILoggerFacade), null, bootstrapper.BaseLogger, It.IsAny<IInstanceLifetimeManager>()), Times.Once());
         }
@@ -219,9 +224,10 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(
-                container => container.Register(Component.For(typeof(IModuleCatalog)).Instance(It.IsAny<object>())
-                    .LifeStyle.Singleton), Times.Once());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IModuleCatalog))
+                    .Instance(It.IsAny<object>())
+                    .LifeStyle.Singleton),
+                Times.Once());
 
             //mockedContainer.Verify(c => c.RegisterInstance(typeof(IModuleCatalog), null, It.IsAny<object>(), It.IsAny<IInstanceLifetimeManager>()), Times.Once());
         }
@@ -236,9 +242,9 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(
-                container => container.Register(Component.For(typeof(IServiceLocator)).Instance(typeof(CastleWindsorServiceLocatorAdapter))
-                    .LifeStyle.Singleton), Times.Once());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IServiceLocator))
+                .Instance(typeof(CastleWindsorServiceLocatorAdapter))
+                .LifeStyle.Singleton), Times.Once());
 
             //mockedContainer.Verify(c => c.RegisterType(typeof(IServiceLocator), typeof(CastleWindsorServiceLocatorAdapter), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
         }
@@ -253,7 +259,9 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(c => c.RegisterType(typeof(IModuleInitializer), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IModuleInitializer))
+                    .Instance(typeof(object))
+                    .LifeStyle.Singleton),Times.Once());
         }
 
         [StaFact]
@@ -266,7 +274,13 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(c => c.RegisterType(typeof(IRegionManager), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
+            mockedContainer.Verify(
+                container => container.Register(Component.For(typeof(IRegionManager))
+                    .Instance(It.IsAny<Type>())
+                    .LifeStyle.Transient),
+                Times.Once());
+
+            //mockedContainer.Verify(c => c.RegisterType(typeof(IRegionManager), It.IsAny<Type>(), null, It.IsAny<LifeStyle>()), Times.Once());
         }
 
         [StaFact]
@@ -279,7 +293,13 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(c => c.RegisterType(typeof(RegionAdapterMappings), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
+            mockedContainer.Verify(
+                container => container.Register(Component.For(typeof(RegionAdapterMappings))
+                    .Instance(typeof(RegionAdapterMappings))
+                    .LifeStyle.Singleton),
+                Times.Once());
+
+            //mockedContainer.Verify(container => container.Register(Component.For(typeof(RegionAdapterMappings)).Instance(typeof(RegionAdapterMappings)).LifeStyle.Singleton), Times.Once());
         }
 
         [StaFact]
@@ -292,7 +312,12 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(c => c.RegisterType(typeof(IRegionViewRegistry), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IRegionViewRegistry))
+                    .Instance(It.IsAny<Type>())
+                    .LifeStyle.Transient),
+                Times.Once());
+
+            //mockedContainer.Verify(c => c.RegisterType(typeof(IRegionViewRegistry), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
         }
 
         [StaFact]
@@ -305,7 +330,12 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(c => c.RegisterType(typeof(IRegionBehaviorFactory), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IRegionBehaviorFactory))
+                    .Instance(typeof(object))
+                    .LifeStyle.Transient),
+                Times.Once());
+
+            //mockedContainer.Verify(c => c.RegisterType(typeof(IRegionBehaviorFactory), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
         }
 
         [StaFact]
@@ -318,7 +348,12 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             bootstrapper.Run();
 
-            mockedContainer.Verify(c => c.RegisterType(typeof(IEventAggregator), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IEventAggregator))
+                    .Instance(typeof(object))
+                    .LifeStyle.Transient),
+                Times.Once());
+
+            //mockedContainer.Verify(c => c.RegisterType(typeof(IEventAggregator), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Once());
         }
 
         [StaFact]
@@ -330,11 +365,26 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
             var bootstrapper = new MockedContainerBootstrapper(mockedContainer.Object);
             bootstrapper.Run(false);
 
-            mockedContainer.Verify(c => c.RegisterType(typeof(IEventAggregator), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Never());
-            mockedContainer.Verify(c => c.RegisterType(typeof(IRegionManager), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Never());
-            mockedContainer.Verify(c => c.RegisterType(typeof(RegionAdapterMappings), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Never());
-            mockedContainer.Verify(c => c.RegisterType(typeof(IServiceLocator), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Never());
-            mockedContainer.Verify(c => c.RegisterType(typeof(IModuleInitializer), It.IsAny<Type>(), null, It.IsAny<ITypeLifetimeManager>()), Times.Never());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IEventAggregator))
+                    .Instance(typeof(object))
+                    .LifeStyle.Transient),
+                Times.Never());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IRegionManager))
+                    .Instance(typeof(object))
+                    .LifeStyle.Transient),
+                Times.Never());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(RegionAdapterMappings))
+                    .Instance(typeof(object))
+                    .LifeStyle.Transient),
+                Times.Never());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IServiceLocator))
+                    .Instance(typeof(object))
+                    .LifeStyle.Transient),
+                Times.Never());
+            mockedContainer.Verify(container => container.Register(Component.For(typeof(IModuleInitializer))
+                    .Instance(typeof(object))
+                    .LifeStyle.Transient),
+                Times.Never());
         }
 
         [StaFact]
@@ -346,29 +396,49 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
             var mockedModuleInitializer = new Mock<IModuleInitializer>();
             var mockedModuleManager = new Mock<IModuleManager>();
             var regionAdapterMappings = new RegionAdapterMappings();
-            var serviceLocatorAdapter = new UnityServiceLocatorAdapter(container);
+            var serviceLocatorAdapter = new CastleWindsorServiceLocatorAdapter(container);
             var regionBehaviorFactory = new RegionBehaviorFactory(serviceLocatorAdapter);
 
-            container.RegisterInstance<IServiceLocator>(serviceLocatorAdapter);
-            container.RegisterInstance<IModuleCatalog>(new ModuleCatalog());
-            container.RegisterInstance<IModuleInitializer>(mockedModuleInitializer.Object);
-            container.RegisterInstance<IModuleManager>(mockedModuleManager.Object);
-            container.RegisterInstance<RegionAdapterMappings>(regionAdapterMappings);
-            
-            container.RegisterSingleton(typeof(RegionAdapterMappings), typeof(RegionAdapterMappings));
-            container.RegisterSingleton(typeof(IRegionManager), typeof(RegionManager));
-            container.RegisterSingleton(typeof(IEventAggregator), typeof(EventAggregator));
-            container.RegisterSingleton(typeof(IRegionViewRegistry), typeof(RegionViewRegistry));
-            container.RegisterSingleton(typeof(IRegionBehaviorFactory), typeof(RegionBehaviorFactory));
-            container.RegisterSingleton(typeof(IRegionNavigationJournalEntry), typeof(RegionNavigationJournalEntry));
-            container.RegisterSingleton(typeof(IRegionNavigationJournal), typeof(RegionNavigationJournal));
-            container.RegisterSingleton(typeof(IRegionNavigationService), typeof(RegionNavigationService));
-            container.RegisterSingleton(typeof(IRegionNavigationContentLoader), typeof(global::Prism.Regions.UnityRegionNavigationContentLoader));
+            container.Register(Component.For(typeof(IServiceLocator)).Instance(serviceLocatorAdapter).LifeStyle.Transient);
+            container.Register(Component.For(typeof(IModuleCatalog)).Instance(mockedModuleInitializer.Object).LifeStyle.Transient);
+            container.Register(Component.For(typeof(IModuleInitializer)).Instance(new ModuleCatalog()).LifeStyle.Transient);
+            container.Register(Component.For(typeof(IModuleManager)).Instance(mockedModuleManager.Object).LifeStyle.Transient);
+            container.Register(Component.For(typeof(RegionAdapterMappings)).Instance(regionAdapterMappings).LifeStyle.Transient);
 
 
-            container.RegisterInstance<SelectorRegionAdapter>(new SelectorRegionAdapter(regionBehaviorFactory));
-            container.RegisterInstance<ItemsControlRegionAdapter>(new ItemsControlRegionAdapter(regionBehaviorFactory));
-            container.RegisterInstance<ContentControlRegionAdapter>(new ContentControlRegionAdapter(regionBehaviorFactory));
+            //container.RegisterInstance<IServiceLocator>(serviceLocatorAdapter);
+            //container.RegisterInstance<IModuleCatalog>(new ModuleCatalog());
+            //container.RegisterInstance<IModuleInitializer>(mockedModuleInitializer.Object);
+            //container.RegisterInstance<IModuleManager>(mockedModuleManager.Object);
+            //container.RegisterInstance<RegionAdapterMappings>(regionAdapterMappings);
+
+            container.RegisterType<RegionAdapterMappings, RegionAdapterMappings>(true);
+            container.RegisterType<IRegionManager, RegionManager>(true);
+            container.RegisterType<IRegionViewRegistry, EventAggregator>(true);
+            container.RegisterType<IRegionViewRegistry, RegionViewRegistry>(true);
+            container.RegisterType<IRegionBehaviorFactory, RegionBehaviorFactory>(true);
+            container.RegisterType<IRegionNavigationJournalEntry, RegionNavigationJournalEntry>(true);
+            container.RegisterType<IRegionNavigationJournal, RegionNavigationJournal>(true);
+            container.RegisterType<IRegionNavigationService, RegionNavigationService>(true);
+            container.RegisterType<IRegionNavigationContentLoader, CastleWindsorRegionNavigationContentLoader>(true);
+
+            //container.RegisterSingleton(typeof(RegionAdapterMappings), typeof(RegionAdapterMappings));
+            //container.RegisterSingleton(typeof(IRegionManager), typeof(RegionManager));
+            //container.RegisterSingleton(typeof(IEventAggregator), typeof(EventAggregator));
+            //container.RegisterSingleton(typeof(IRegionViewRegistry), typeof(RegionViewRegistry));
+            //container.RegisterSingleton(typeof(IRegionBehaviorFactory), typeof(RegionBehaviorFactory));
+            //container.RegisterSingleton(typeof(IRegionNavigationJournalEntry), typeof(RegionNavigationJournalEntry));
+            //container.RegisterSingleton(typeof(IRegionNavigationJournal), typeof(RegionNavigationJournal));
+            //container.RegisterSingleton(typeof(IRegionNavigationService), typeof(RegionNavigationService));
+            //container.RegisterSingleton(typeof(IRegionNavigationContentLoader), typeof(global::Prism.Regions.CastleWindsorRegionNavigationContentLoader));
+
+            container.RegisterInstance<SelectorRegionAdapter, SelectorRegionAdapter>(new SelectorRegionAdapter(regionBehaviorFactory));
+            container.RegisterInstance<ItemsControlRegionAdapter, ItemsControlRegionAdapter>(new ItemsControlRegionAdapter(regionBehaviorFactory));
+            container.RegisterInstance<ContentControlRegionAdapter, ContentControlRegionAdapter>(new ContentControlRegionAdapter(regionBehaviorFactory));
+
+            //container.RegisterInstance<SelectorRegionAdapter>(new SelectorRegionAdapter(regionBehaviorFactory));
+            //container.RegisterInstance<ItemsControlRegionAdapter>(new ItemsControlRegionAdapter(regionBehaviorFactory));
+            //container.RegisterInstance<ContentControlRegionAdapter>(new ContentControlRegionAdapter(regionBehaviorFactory));
 
             var bootstrapper = new MockedContainerBootstrapper(container);
             bootstrapper.Run(false);
@@ -581,14 +651,14 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
         private static void SetupMockedContainerForVerificationTests(Mock<IWindsorContainer> mockedContainer)
         {
             var mockedModuleInitializer = new Mock<IModuleInitializer>();
-            var mockedModuleManager = new Mock<IModuleManager>();
-            var regionAdapterMappings = new RegionAdapterMappings();
-            var serviceLocatorAdapter = new UnityServiceLocatorAdapter(mockedContainer.Object);
-            var regionBehaviorFactory = new RegionBehaviorFactory(serviceLocatorAdapter);
+            var mockedModuleManager     = new Mock<IModuleManager>();
+            var regionAdapterMappings   = new RegionAdapterMappings();
+            var serviceLocatorAdapter   = new CastleWindsorServiceLocatorAdapter(mockedContainer.Object);
+            var regionBehaviorFactory   = new RegionBehaviorFactory(serviceLocatorAdapter);
 
             mockedContainer.Setup(c => c.Resolve(typeof(IServiceLocator), (string)null)).Returns(serviceLocatorAdapter);
 
-            mockedContainer.Setup(c => c.RegisterInstance(It.IsAny<Type>(), It.IsAny<string>(), It.IsAny<object>(), It.IsAny<IInstanceLifetimeManager>()));
+            //mockedContainer.Setup(c => c.RegisterInstance(It.IsAny<Type>(), It.IsAny<string>(), It.IsAny<object>(), It.IsAny<IInstanceLifetimeManager>()));
 
             mockedContainer.Setup(c => c.Resolve(typeof(IModuleCatalog), (string)null)).Returns(
                 new ModuleCatalog());
@@ -598,7 +668,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
             mockedContainer.Setup(c => c.Resolve(typeof(IModuleManager), (string)null)).Returns(
                 mockedModuleManager.Object);
-
 
             mockedContainer.Setup(c => c.Resolve(typeof(RegionAdapterMappings), (string)null)).Returns(
                 regionAdapterMappings);
@@ -632,6 +701,11 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
             protected override IWindsorContainer CreateContainer()
             {
                 return container;
+            }
+
+            protected override IContainerExtension CreateContainerExtension()
+            {
+                return new CastleWindsorContainerExtension();
             }
 
             protected override DependencyObject CreateShell()

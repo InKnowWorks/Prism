@@ -31,7 +31,39 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
             return container.Register(Component.For(typeof(TServiceType))
                 .ImplementedBy(typeof(TClassType))
                 .Named(name)
-                .LifeStyle.Singleton);
+                .LifeStyle.Transient);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="type"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public static IWindsorContainer RegisterInstance(this IWindsorContainer container, Type type, object instance)
+        {
+            return container.Register(Component.For(type)
+                .Instance(instance)
+                .LifeStyle.Transient);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="type"></param>
+        /// <param name="instance"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static IWindsorContainer RegisterInstance<TService, TClassType>(this IWindsorContainer container, object instance, string name = null) where TService: class
+                                                                                                                                                      where TClassType: class
+        {
+            return container.Register(Component.For(typeof(TService))
+                .ImplementedBy(typeof(TClassType))
+                .Instance(instance)
+                .LifeStyle.Transient);
         }
 
         /// <summary>
@@ -47,11 +79,10 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
 
             //return RegisterType<object, TClassType>(container, name);
 
-
             return container.Register(Component.For(typeof(TClassType))
                 .ImplementedBy(typeof(object))
                 .Named(typeof(TClassType).Namespace)
-                .LifeStyle.Singleton);
+                .LifeStyle.Transient);
         }
 
         /// <summary>Register a theClassType mapping with the container.</summary>
@@ -103,11 +134,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
                         .ImplementedBy(typeof(TClassType))
                         .Named(name)
                         .LifeStyle.Pooled);
-                //case LifestyleType.PerWebRequest:
-                //    return container.Register(Component.For(typeof(TServiceType))
-                //        .ImplementedBy(typeof(TClassType))
-                //        .Named(name)
-                //        .LifeStyle.PerWebRequest);
                 case LifestyleType.Custom:
                     break;
                 case LifestyleType.Scoped:
@@ -171,10 +197,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
                     return container.Register(Component.For(typeof(TClassType))
                         .Named(name)
                         .LifeStyle.Pooled);
-                //case LifestyleType.PerWebRequest:
-                //    return container.Register(Component.For(typeof(TClassType))
-                //        .Named(name)
-                //        .LifeStyle.PerWebRequest);
                 case LifestyleType.Custom:
                     break;
                 case LifestyleType.Scoped:
@@ -198,12 +220,15 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
         /// </summary>
         /// <param name="container"></param>
         /// <param name="theClassType"></param>
+        /// <param name="theUIViewName"></param>
         /// <returns></returns>
         public static object Resolve(this IWindsorContainer container, Type theClassType, string theUIViewName)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
+
             if (theClassType.IsClass && !container.Kernel.HasComponent(theClassType))
                 container.Register(Component.For(theClassType).Named(theClassType.FullName).LifeStyle.Transient);
+
             if (string.IsNullOrWhiteSpace(theUIViewName))
             {
                 throw new ArgumentException("message", nameof(theUIViewName));
@@ -238,15 +263,29 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
             {
                 var serviceType = container.TryResolve(typeof(TServiceType));
 
-                if (serviceType == null)
+                if (serviceType == null &&!singleton)
                     container.Register(Component.For(typeof(TServiceType))
                         .ImplementedBy(typeof(TClassType))
-                        .LifeStyle.Singleton);
+                        .LifeStyle.Transient);
+
+                if (singleton)
+                {
+                    if (serviceType == null)
+                        container.Register(Component.For(typeof(TServiceType))
+                            .ImplementedBy(typeof(TClassType))
+                            .LifeStyle.Singleton);
+                }
 
                 //container.Kernel.AddComponent(typeof(TClassType).FullName, typeof(TServiceType), typeof(TClassType), singleton ? LifestyleType.Singleton : LifestyleType.Transient);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="windsorContainer"></param>
+        /// <param name="serviceType"></param>
+        /// <returns></returns>
         internal static object Resolve(IWindsorContainer windsorContainer, Type serviceType)
         {
             if (serviceType.IsClass && !windsorContainer.Kernel.HasComponent(serviceType))

@@ -7,7 +7,8 @@ using Xunit;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 {
-    
+    using global::Prism.Ioc;
+
     public class CastleWindsorBootstrapperNullLoggerFixture : BootstrapperFixtureBase
     {
         [Fact]
@@ -20,6 +21,11 @@ namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 
         internal class NullLoggerBootstrapper : CastleWindsorBootstrapper
         {
+            protected override IContainerExtension CreateContainerExtension()
+            {
+                throw new NotImplementedException();
+            }
+
             protected override ILoggerFacade CreateLogger()
             {
                 return null;

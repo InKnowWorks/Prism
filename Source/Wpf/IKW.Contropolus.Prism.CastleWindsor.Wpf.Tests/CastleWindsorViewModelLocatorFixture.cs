@@ -6,8 +6,10 @@ using Xunit;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.Wpf.Tests
 {
+    using WPF.Legacy;
+
     [Collection("ServiceLocator")]
-    public class UnityViewModelLocatorFixture
+    public class CastleWindsorViewModelLocatorFixture
     {
         [StaFact]
         public void ShouldLocateViewModelAndResolveWithContainer()
