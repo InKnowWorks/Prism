@@ -10,7 +10,14 @@ using Prism.Ioc;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
 {
+    using System.ComponentModel;
+    using System.Globalization;
+    using global::Prism.Logging;
+    using global::Prism.Modularity;
     using global::Prism.Regions;
+    using global::Prism.Regions.Behaviors;
+    using Wpf.Local.Messages;
+    using Component = Castle.MicroKernel.Registration.Component;
 
     public class CastleWindsorContainerExtension : IContainerExtension<IWindsorContainer>
     {
@@ -29,6 +36,9 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         {
             Instance = container;
 
+            //Instance.Register(Component.For<ILoggerFacade>().Instance(Logger));
+            //Instance.Register(Component.For<IModuleCatalog>().Instance(ModuleCatalog));
+
             Instance.Register(Component.For<IWindsorContainer>().Instance(container));
 
             // register region adapters
@@ -36,6 +46,8 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
 
             // register region behaviors
             Instance.Register(Classes.FromAssemblyContaining<IRegionBehavior>().BasedOn<IRegionBehavior>().LifestyleTransient());
+
+            Instance.RegisterType<DelayedRegionCreationBehavior,DelayedRegionCreationBehavior>(false);
         }
 
         /// <summary>

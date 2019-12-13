@@ -151,7 +151,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
                 // register region behaviors
                 Container.Register(Classes.FromAssemblyContaining<IRegionBehavior>().BasedOn<IRegionBehavior>().LifestyleTransient());
 
-
                 RegisterTypeIfMissing(typeof(IDialogService), typeof(DialogService), true);
                 RegisterTypeIfMissing(typeof(IDialogWindow), typeof(DialogWindow), false);
 
@@ -230,8 +229,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
 
             if (Container.Kernel.HasComponent(fromType))
             {
-                Logger.Log(
-                    String.Format(CultureInfo.CurrentCulture,
+                Logger.Log(String.Format(CultureInfo.CurrentCulture,
                                   Resources.TypeMappingAlreadyRegistered,
                                   fromType.Name), Category.Debug, Priority.Low);
             }
