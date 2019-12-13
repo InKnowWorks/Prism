@@ -141,10 +141,15 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
             Container.Register(Component.For<ILoggerFacade>().Instance(Logger));
             Container.Register(Component.For<IModuleCatalog>().Instance(ModuleCatalog));
 
-
             if (useDefaultConfiguration)
             {
                 Container.Register(Component.For<IWindsorContainer>().Instance(Container));
+
+                // register region adapters
+                Container.Register(Classes.FromAssemblyContaining<IRegionAdapter>().BasedOn<IRegionAdapter>().LifestyleTransient());
+
+                // register region behaviors
+                Container.Register(Classes.FromAssemblyContaining<IRegionBehavior>().BasedOn<IRegionBehavior>().LifestyleTransient());
 
 
                 RegisterTypeIfMissing(typeof(IDialogService), typeof(DialogService), true);
@@ -164,12 +169,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
                 RegisterTypeIfMissing(typeof(IRegionNavigationService), typeof(RegionNavigationService), false);
                 RegisterTypeIfMissing(typeof(IRegionNavigationContentLoader), typeof(RegionNavigationContentLoader), true);
                 RegisterTypeIfMissing(typeof(DelayedRegionCreationBehavior), typeof(DelayedRegionCreationBehavior), false);
-
-                // register region adapters
-                Container.Register(Classes.FromAssemblyContaining<IRegionAdapter>().BasedOn<IRegionAdapter>().LifestyleTransient());
-
-                // register region behaviors
-                Container.Register(Classes.FromAssemblyContaining<IRegionBehavior>().BasedOn<IRegionBehavior>().LifestyleTransient());
             }
         }
 

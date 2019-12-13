@@ -10,6 +10,8 @@ using Prism.Ioc;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
 {
+    using global::Prism.Regions;
+
     public class CastleWindsorContainerExtension : IContainerExtension<IWindsorContainer>
     {
         public IWindsorContainer Instance { get; }
@@ -23,7 +25,18 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// 
         /// </summary>
         /// <param name="container"></param>
-        public CastleWindsorContainerExtension(IWindsorContainer container) => Instance = container;
+        public CastleWindsorContainerExtension(IWindsorContainer container)
+        {
+            Instance = container;
+
+            Instance.Register(Component.For<IWindsorContainer>().Instance(container));
+
+            // register region adapters
+            Instance.Register(Classes.FromAssemblyContaining<IRegionAdapter>().BasedOn<IRegionAdapter>().LifestyleTransient());
+
+            // register region behaviors
+            Instance.Register(Classes.FromAssemblyContaining<IRegionBehavior>().BasedOn<IRegionBehavior>().LifestyleTransient());
+        }
 
         /// <summary>
         /// 

@@ -10,6 +10,9 @@ using Prism.Regions;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF
 {
+    using Castle.MicroKernel.Registration;
+    using Castle.Windsor;
+
     public abstract class PrismApplication : PrismApplicationBase
     {
         protected override IContainerExtension CreateContainerExtension()
@@ -20,6 +23,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF
         protected override void RegisterRequiredTypes(IContainerRegistry containerRegistry)
         {
             base.RegisterRequiredTypes(containerRegistry);
+
             containerRegistry.RegisterSingleton<IRegionNavigationContentLoader, CastleWindsorRegionNavigationContentLoader>();
             containerRegistry.RegisterSingleton<IServiceLocator, CastleWindsorServiceLocatorAdapter>();
         }
