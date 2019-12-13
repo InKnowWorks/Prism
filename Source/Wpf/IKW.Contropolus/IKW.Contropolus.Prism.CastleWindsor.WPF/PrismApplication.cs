@@ -27,7 +27,14 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF
         protected override void RegisterFrameworkExceptionTypes()
         {
             base.RegisterFrameworkExceptionTypes();
+
             ExceptionExtensions.RegisterFrameworkExceptionType(typeof(ResolutionFailedException));
+
+            ExceptionExtensions.RegisterFrameworkExceptionType(
+                typeof(Castle.Windsor.Configuration.Interpreters.ConfigurationProcessingException));
+
+            ExceptionExtensions.RegisterFrameworkExceptionType(
+                typeof(Castle.MicroKernel.ComponentNotFoundException));
         }
     }
 }

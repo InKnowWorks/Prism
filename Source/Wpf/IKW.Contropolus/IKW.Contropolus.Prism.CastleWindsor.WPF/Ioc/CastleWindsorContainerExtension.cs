@@ -38,9 +38,12 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry RegisterInstance(Type type, object instance)
         {
-            Instance.Register(Component.For(type)
+            if (!Instance.Kernel.HasComponent(type))
+            {
+                Instance.Register(Component.For(type)
                     .Instance(instance)
                     .LifeStyle.Transient);
+            }
 
             return this;
         }
@@ -54,10 +57,13 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry RegisterInstance(Type type, object instance, string name)
         {
-            Instance.Register(Component.For(type)
-                .Instance(instance)
-                .Named(name)
-                .LifeStyle.Transient);
+            if (!Instance.Kernel.HasComponent(type))
+            {
+                Instance.Register(Component.For(type)
+                    .Instance(instance)
+                    .Named(name)
+                    .LifeStyle.Transient);
+            }
 
             return this;
         }
@@ -73,10 +79,13 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
             if (@from == null) throw new ArgumentNullException(nameof(@from));
             if (to == null) throw new ArgumentNullException(nameof(to));
 
-            Instance.Register(Component.For(from)
-                .ImplementedBy(to)
-                .Named(to.Namespace)
-                .LifeStyle.Singleton);
+            if (!Instance.Kernel.HasComponent(from))
+            {
+                Instance.Register(Component.For(from)
+                    .ImplementedBy(to)
+                    .Named(to.Namespace)
+                    .LifeStyle.Singleton);
+            }
 
             return this;
         }
@@ -90,10 +99,14 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
         {
-            Instance.Register(Component.For(from)
-                .ImplementedBy(to)
-                .Named(name)
-                .LifeStyle.Singleton);
+
+            if (!Instance.Kernel.HasComponent(from))
+            {
+                Instance.Register(Component.For(from)
+                    .ImplementedBy(to)
+                    .Named(name)
+                    .LifeStyle.Singleton);
+            }
 
             return this;
         }
@@ -106,10 +119,13 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry Register(Type from, Type to)
         {
-            Instance.Register(Component.For(from)
-                .ImplementedBy(to)
-                .Named(to.Namespace)
-                .LifeStyle.Transient);
+            if (!Instance.Kernel.HasComponent(from))
+            {
+                Instance.Register(Component.For(from)
+                    .ImplementedBy(to)
+                    .Named(to.Namespace)
+                    .LifeStyle.Transient);
+            }
 
             return this;
         }
@@ -123,10 +139,13 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry Register(Type from, Type to, string name)
         {
-            Instance.Register(Component.For(from)
-                .ImplementedBy(to)
-                .Named(name)
-                .LifeStyle.Transient);
+            if (!Instance.Kernel.HasComponent(from))
+            {
+                Instance.Register(Component.For(from)
+                    .ImplementedBy(to)
+                    .Named(name)
+                    .LifeStyle.Transient);
+            }
 
             return this;
         }
