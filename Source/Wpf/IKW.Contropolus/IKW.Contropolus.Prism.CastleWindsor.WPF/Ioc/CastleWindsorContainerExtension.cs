@@ -81,11 +81,11 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
             if (to == null) throw new ArgumentNullException(nameof(to));
 
             if (!Instance.Kernel.HasComponent(from) &&
-                !Instance.Kernel.HasComponent(to.Namespace))
+                !Instance.Kernel.HasComponent(to.FullName))
             {
                 Instance.Register(Component.For(from)
                     .ImplementedBy(to)
-                    .Named(to.Namespace)
+                    .Named(to.FullName)
                     .LifeStyle.Singleton);
             }
 
