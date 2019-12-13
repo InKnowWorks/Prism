@@ -57,7 +57,8 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry RegisterInstance(Type type, object instance, string name)
         {
-            if (!Instance.Kernel.HasComponent(type))
+            if (!Instance.Kernel.HasComponent(type) &&
+                !Instance.Kernel.HasComponent(name))
             {
                 Instance.Register(Component.For(type)
                     .Instance(instance)
@@ -79,7 +80,8 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
             if (@from == null) throw new ArgumentNullException(nameof(@from));
             if (to == null) throw new ArgumentNullException(nameof(to));
 
-            if (!Instance.Kernel.HasComponent(from))
+            if (!Instance.Kernel.HasComponent(from) &&
+                !Instance.Kernel.HasComponent(to.Namespace))
             {
                 Instance.Register(Component.For(from)
                     .ImplementedBy(to)
@@ -100,7 +102,8 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
         {
 
-            if (!Instance.Kernel.HasComponent(from))
+            if (!Instance.Kernel.HasComponent(from) &&
+                !Instance.Kernel.HasComponent(name))
             {
                 Instance.Register(Component.For(from)
                     .ImplementedBy(to)
@@ -119,7 +122,8 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry Register(Type from, Type to)
         {
-            if (!Instance.Kernel.HasComponent(from))
+            if (!Instance.Kernel.HasComponent(from) &&
+                !Instance.Kernel.HasComponent(to.Namespace))
             {
                 Instance.Register(Component.For(from)
                     .ImplementedBy(to)
@@ -139,7 +143,8 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry Register(Type from, Type to, string name)
         {
-            if (!Instance.Kernel.HasComponent(from))
+            if (!Instance.Kernel.HasComponent(from) &&
+                !Instance.Kernel.HasComponent(name))
             {
                 Instance.Register(Component.For(from)
                     .ImplementedBy(to)
@@ -192,7 +197,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
             if (parameters.Length == 0)
-                throw new ArgumentException("Value cannot be an empty collection.", nameof(parameters));
+                throw new ArgumentException($@"Value cannot be an empty collection.", nameof(parameters));
 
             var overrides = parameters.Select(p => new KeyValuePair<object, object>(p.Type, p.Instance)).ToList();
 
@@ -222,10 +227,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public bool IsRegistered(Type type)
-        {
-            return Instance.Kernel.HasComponent(type);
-        }
+        public bool IsRegistered(Type type) => Instance.Kernel.HasComponent(type);
 
         /// <summary>
         /// 
@@ -233,11 +235,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public bool IsRegistered(Type type, string name)
-        {
-            return Instance.Kernel.HasComponent(name);
-        }
-
-
+        public bool IsRegistered(Type type, string name) => !Instance.Kernel.HasComponent(type) && !Instance.Kernel.HasComponent(name);
     }
 }
