@@ -123,11 +123,11 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         public IContainerRegistry Register(Type from, Type to)
         {
             if (!Instance.Kernel.HasComponent(from) &&
-                !Instance.Kernel.HasComponent(to.Namespace))
+                !Instance.Kernel.HasComponent(to.FullName))
             {
                 Instance.Register(Component.For(from)
                     .ImplementedBy(to)
-                    .Named(to.Namespace)
+                    .Named(to.FullName)
                     .LifeStyle.Transient);
             }
 
