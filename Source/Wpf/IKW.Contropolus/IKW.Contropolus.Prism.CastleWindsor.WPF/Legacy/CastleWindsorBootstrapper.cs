@@ -16,6 +16,7 @@ using Prism.Regions.Behaviors;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
 {
+    //using global::Prism.Extensions;
     using global::Prism.Ioc;
     using global::Prism.Services.Dialogs;
     using Ioc;

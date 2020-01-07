@@ -3,6 +3,9 @@ using Prism.Ioc;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class PrismIocExtensions
     {
         public static IWindsorContainer GetContainer(this IContainerProvider containerProvider)

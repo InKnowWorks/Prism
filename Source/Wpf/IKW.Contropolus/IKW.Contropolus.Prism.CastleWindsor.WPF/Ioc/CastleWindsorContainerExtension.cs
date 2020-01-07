@@ -19,6 +19,9 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
     using Wpf.Local.Messages;
     using Component = Castle.MicroKernel.Registration.Component;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CastleWindsorContainerExtension : IContainerExtension<IWindsorContainer>
     {
         public IWindsorContainer Instance { get; }

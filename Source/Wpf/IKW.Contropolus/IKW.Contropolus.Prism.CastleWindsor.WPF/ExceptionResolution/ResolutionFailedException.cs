@@ -6,6 +6,9 @@ using System.Text;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF.ExceptionResolution
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class ResolutionFailedException : Exception
     {
