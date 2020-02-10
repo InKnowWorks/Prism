@@ -3,23 +3,23 @@ using System.Globalization;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using CommonServiceLocator;
+using IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc;
 using IKW.Contropolus.Prism.CastleWindsor.Wpf.Local.Messages;
 using IKW.Contropolus.Prism.CastleWindsor.Wpf.Regions;
 using IKW.Contropolus.Prism.CastleWindsor.Wpf.ServiceLocator;
-using Prism;
-using Prism.Events;
-using Prism.Logging;
-using Prism.Modularity;
-using Prism.Regions;
-using Prism.Regions.Behaviors;
 
 namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
 {
     //using global::Prism.Extensions;
+    using CommonServiceLocator;
+    using global::Prism;
+    using global::Prism.Events;
     using global::Prism.Ioc;
+    using global::Prism.Logging;
+    using global::Prism.Modularity;
+    using global::Prism.Regions;
+    using global::Prism.Regions.Behaviors;
     using global::Prism.Services.Dialogs;
-    using Ioc;
 
     /// <summary>
     /// Base class that provides a basic bootstrapping sequence that

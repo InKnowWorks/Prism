@@ -100,6 +100,27 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <summary>
         /// 
         /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <param name="instance"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IContainerRegistry RegisterSingletonType<TService>(object instance, string name)
+        {
+            if (!Instance.Kernel.HasComponent(typeof(TService)) &&
+                !Instance.Kernel.HasComponent(name))
+            {
+                Instance.Register(Component.For(typeof(TService))
+                                           .Instance(instance)
+                                           .Named(name)
+                                           .LifeStyle.Singleton);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
@@ -129,7 +150,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
         {
-
             if (!Instance.Kernel.HasComponent(from) &&
                 !Instance.Kernel.HasComponent(name))
             {
@@ -137,6 +157,52 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
                     .ImplementedBy(to)
                     .Named(name)
                     .LifeStyle.Singleton);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IContainerRegistry RegisterSingleton<TInterface, TImplementation>(string name) where TImplementation: class
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("message", nameof(name));
+            }
+
+            if (!Instance.Kernel.HasComponent(typeof(TInterface)) &&
+                !Instance.Kernel.HasComponent(typeof(TImplementation)) &&
+                !Instance.Kernel.HasComponent(name))
+            {
+                Instance.Register(Component.For(typeof(TInterface))
+                                           .ImplementedBy(typeof(TImplementation))
+                                           .Named(name)
+                                           .LifeStyle.Singleton);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IContainerRegistry RegisterSingleton<TInterface, TImplementation>() where TImplementation : class
+        {
+            if (!Instance.Kernel.HasComponent(typeof(TInterface))      &&
+                !Instance.Kernel.HasComponent(typeof(TImplementation)) &&
+                !Instance.Kernel.HasComponent(typeof(TInterface).FullName) &&
+                !Instance.Kernel.HasComponent(typeof(TImplementation).FullName))
+            {
+                Instance.Register(Component.For(typeof(TInterface))
+                                           .ImplementedBy(typeof(TImplementation))
+                                           .Named(typeof(TInterface).FullName)
+                                           .LifeStyle.Singleton);
             }
 
             return this;
