@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;net47;netcoreapp3.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Prism.CastleWindsor</PackageId>
+    <Authors>Tavi Truman</Authors>
+    <Company>InKnowWorks</Company>
+    <Product>IKW.Contropolus.Prism.CastleWindsor.WPF</Product>
+    <Description>IKW Customized IoC for Prism 7.x Famework - Contropolus</Description>
+    <PackageTags>prism;castlewindsor;mvvm;wpf;xaml</PackageTags>
+    <Version Condition=" '$(PRISM_UNITY_WPF_VERSION)' != '' ">$(PRISM_UNITY_WPF_VERSION)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Castle.Core" Version="4.4.0" />
+    <PackageReference Include="Castle.Windsor" Version="5.0.1" />
+    <PackageReference Include="CommonServiceLocator" Version="2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Prism\Prism.csproj" />
+    <ProjectReference Include="..\..\Prism.Wpf\Prism.Wpf.csproj" />
+  </ItemGroup>
+
+</Project>
