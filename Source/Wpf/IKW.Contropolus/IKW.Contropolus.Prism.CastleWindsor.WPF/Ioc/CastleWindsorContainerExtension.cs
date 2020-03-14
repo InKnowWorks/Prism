@@ -39,9 +39,6 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         {
             Instance = container;
 
-            //Instance.Register(Component.For<ILoggerFacade>().Instance(Logger));
-            //Instance.Register(Component.For<IModuleCatalog>().Instance(ModuleCatalog));
-
             Instance.Register(Component.For<IWindsorContainer>().Instance(container));
 
             // register region adapters

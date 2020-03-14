@@ -205,6 +205,10 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
             return new WindsorContainer();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected override IContainerExtension CreateContainerExtension()
         {
             return new CastleWindsorContainerExtension(Container);

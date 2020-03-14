@@ -12,6 +12,14 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.ExceptionResolution
     [Serializable]
     public class ResolutionFailedException : Exception
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeRequested"></param>
+        /// <param name="nameRequested"></param>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public ResolutionFailedException(Type typeRequested,
                                          string nameRequested,
                                          string message,
@@ -60,19 +68,37 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.ExceptionResolution
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        /// <exception cref="NotImplementedException"></exception>
         protected ResolutionFailedException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ResolutionFailedException()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public ResolutionFailedException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         public ResolutionFailedException(string message, Exception innerException) : base(message, innerException)
         {
         }
