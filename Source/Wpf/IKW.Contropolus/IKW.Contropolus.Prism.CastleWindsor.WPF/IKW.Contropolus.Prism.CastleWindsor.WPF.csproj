@@ -12,7 +12,7 @@
     <Description>IKW Customized IoC for Prism 7.x Famework - Contropolus</Description>
     <PackageTags>prism;castlewindsor;mvvm;wpf;xaml</PackageTags>
     <Version Condition=" '$(PRISM_UNITY_WPF_VERSION)' != '' ">$(PRISM_UNITY_WPF_VERSION)</Version>
-    <Version>8.0.1-ci</Version>
+    <Version>8.0.5-ci</Version>
   </PropertyGroup>
 
   <ItemGroup>

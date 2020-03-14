@@ -259,6 +259,8 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
         /// <param name="singleton">if set to <c>true</c> theClassType will be registered as singleton.</param>
         public static void RegisterType<TServiceType, TClassType>(this IWindsorContainer container, bool singleton)
         {
+            var t = container.Kernel.HasComponent(typeof(TServiceType).FullName);
+
             if (container.Kernel.HasComponent(typeof(TServiceType))) return;
 
             var serviceType = container.TryResolve(typeof(TServiceType));

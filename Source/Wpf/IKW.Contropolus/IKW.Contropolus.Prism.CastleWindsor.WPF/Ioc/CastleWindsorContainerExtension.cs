@@ -47,7 +47,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
             // register region behaviors
             Instance.Register(Classes.FromAssemblyContaining<IRegionBehavior>().BasedOn<IRegionBehavior>().LifestyleTransient());
 
-            Instance.RegisterType<DelayedRegionCreationBehavior,DelayedRegionCreationBehavior>(false);
+            //Instance.RegisterType<DelayedRegionCreationBehavior,DelayedRegionCreationBehavior>(false);
         }
 
         /// <summary>
