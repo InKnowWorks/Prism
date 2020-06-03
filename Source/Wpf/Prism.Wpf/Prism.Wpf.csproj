@@ -4,7 +4,7 @@
   <PropertyGroup>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prism</RootNamespace>
-    <TargetFrameworks>net45;net47;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net45;net47;netcoreapp3.1</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <!--<Summary>Prism libraries related to user interface composition, regions, and modularity for WPF.</Summary>-->
     <Description>Prism is a fully open source version of the Prism guidance originally produced by Microsoft Patterns &amp; Practices.  Prism provides an implementation of a collection of design patterns that are helpful in writing well structured and maintainable XAML applications, including MVVM, dependency injection, commanding, event aggregation, and more. Prism's core functionality is a shared code base in a Portable Class Library targeting these platforms; WPF, Windows 10 UWP, and Xamarin Forms. Features that need to be platform specific are implemented in the respective libraries for the target platform.
@@ -12,6 +12,8 @@
 Prism.Wpf helps you more easily design and build rich, flexible, and easy to maintain Windows Presentation Foundation (WPF) desktop applications. This library provides user interface composition as well as modularity support.</Description>
     <PackageTags>prism;mvvm;xaml;wpf</PackageTags>
     <Version Condition=" '$(PRISM_WPF_VERSION)' != '' ">$(PRISM_WPF_VERSION)</Version>
+    <Version>8.1.0</Version>
+    <Authors>Brian Lagunas;Dan Siegel; Tavi Truman</Authors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,12 +32,16 @@ Prism.Wpf helps you more easily design and build rich, flexible, and easy to mai
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.3" />
-    <PackageReference Include="CommonServiceLocator" Version="2.0.4" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="CommonServiceLocator" Version="2.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Prism\Prism.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
   </ItemGroup>
 
 </Project>
