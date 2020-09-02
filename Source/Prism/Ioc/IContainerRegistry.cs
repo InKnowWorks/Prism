@@ -8,13 +8,13 @@ namespace Prism.Ioc
 
         IContainerRegistry RegisterInstance(Type type, object instance, string name);
 
-        IContainerRegistry RegisterSingleton(Type from, Type to);
+        IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType);
 
-        IContainerRegistry RegisterSingleton(Type from, Type to, string name);
+        IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType, string name);
 
-        IContainerRegistry Register(Type from, Type to);
+        IContainerRegistry Register(Type fromServiceType, Type toServiceType);
 
-        IContainerRegistry Register(Type from, Type to, string name);
+        IContainerRegistry Register(Type fromServiceType, Type toServiceType, string name);
 
         bool IsRegistered(Type type);
 

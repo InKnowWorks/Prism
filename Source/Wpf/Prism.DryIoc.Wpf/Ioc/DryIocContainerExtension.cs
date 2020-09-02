@@ -28,27 +28,27 @@ namespace Prism.DryIoc.Ioc
             return this;
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType)
         {
-            Instance.Register(from, to, Reuse.Singleton);
+            Instance.Register(serviceInterfaceType, serviceImplementationType, Reuse.Singleton);
             return this;
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType, string name)
         {
-            Instance.Register(from, to, Reuse.Singleton, serviceKey: name);
+            Instance.Register(serviceInterfaceType, serviceImplementationType, Reuse.Singleton, serviceKey: name);
             return this;
         }
 
-        public IContainerRegistry Register(Type from, Type to)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType)
         {
-            Instance.Register(from, to);
+            Instance.Register(fromServiceType, toServiceType);
             return this;
         }
 
-        public IContainerRegistry Register(Type from, Type to, string name)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType, string name)
         {
-            Instance.Register(from, to, serviceKey: name);
+            Instance.Register(fromServiceType, toServiceType, serviceKey: name);
             return this;
         }
 

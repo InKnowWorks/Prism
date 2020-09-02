@@ -64,9 +64,11 @@ namespace Prism
         public virtual void Initialize()
         {
             _containerExtension = CreateContainerExtension();
-            _moduleCatalog = CreateModuleCatalog();
+            _moduleCatalog      = CreateModuleCatalog();
+
             RegisterRequiredTypes(_containerExtension);
             RegisterTypes(_containerExtension);
+
             _containerExtension.FinalizeExtension();
 
             ConfigureServiceLocator();
@@ -108,6 +110,8 @@ namespace Prism
         {
             return new ModuleCatalog();
         }
+
+        private bool scopeAsSingleton = true;
 
         /// <summary>
         /// Registers all types that are required by Prism to function with the container.

@@ -24,6 +24,9 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
     /// </summary>
     public class CastleWindsorContainerExtension : IContainerExtension<IWindsorContainer>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public IWindsorContainer Instance { get; }
 
         /// <summary>
@@ -32,14 +35,17 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         public CastleWindsorContainerExtension() : this(new WindsorContainer()) { }
 
         /// <summary>
-        /// 
+        /// Must register the Windsor Castle container as a singleton 
         /// </summary>
         /// <param name="container"></param>
         public CastleWindsorContainerExtension(IWindsorContainer container)
         {
             Instance = container;
 
-            Instance.Register(Component.For<IWindsorContainer>().Instance(container));
+            Instance.Register(Component.For<IWindsorContainer>()
+                .Instance(container)
+                .Named(container.Name)
+                .LifeStyle.Singleton);
 
             // register region adapters
             Instance.Register(Classes.FromAssemblyContaining<IRegionAdapter>().BasedOn<IRegionAdapter>().LifestyleTransient());
@@ -95,18 +101,18 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         }
 
         /// <summary>
-        /// 
+        /// Register a TServiceImplementation object type instance as a singleton
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
+        /// <typeparam name="TServiceImplementation"></typeparam>
         /// <param name="instance"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public IContainerRegistry RegisterSingletonType<TService>(object instance, string name)
+        public IContainerRegistry RegisterSingletonType<TServiceImplementation>(object instance, string name) where TServiceImplementation: class
         {
-            if (!Instance.Kernel.HasComponent(typeof(TService)) &&
+            if (!Instance.Kernel.HasComponent(typeof(TServiceImplementation)) &&
                 !Instance.Kernel.HasComponent(name))
             {
-                Instance.Register(Component.For(typeof(TService))
+                Instance.Register(Component.For(typeof(TServiceImplementation))
                                            .Instance(instance)
                                            .Named(name)
                                            .LifeStyle.Singleton);
@@ -118,20 +124,34 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="name"></param>
+        /// <param name="lifeStyleScopeType"></param>
+        /// <typeparam name="TServiceInterface"></typeparam>
+        /// <typeparam name="TServiceImplementation"></typeparam>
         /// <returns></returns>
-        public IContainerRegistry RegisterSingleton(Type from, Type to)
+        public IContainerRegistry RegisterTypeWithLifeStyleType<TServiceInterface, TServiceImplementation>(string name, LifestyleType lifeStyleScopeType)
         {
-            if (@from == null) throw new ArgumentNullException(nameof(@from));
-            if (to == null) throw new ArgumentNullException(nameof(to));
+            return RegisterSingleton(typeof(TServiceInterface), typeof(TServiceImplementation), name);
+        }
 
-            if (!Instance.Kernel.HasComponent(from) &&
-                !Instance.Kernel.HasComponent(to.FullName))
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceInterfaceType"></param>
+        /// <param name="serviceImplementationType"></param>
+        /// <returns></returns>
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType)
+        {
+            if (serviceInterfaceType == null) throw new ArgumentNullException(nameof(serviceInterfaceType));
+            if (serviceImplementationType == null) throw new ArgumentNullException(nameof(serviceImplementationType));
+
+            if (!Instance.Kernel.HasComponent(serviceInterfaceType) &&
+                !Instance.Kernel.HasComponent(serviceImplementationType) &&
+                !Instance.Kernel.HasComponent(serviceImplementationType.FullName))
             {
-                Instance.Register(Component.For(from)
-                    .ImplementedBy(to)
-                    .Named(to.FullName)
+                Instance.Register(Component.For(serviceInterfaceType)
+                    .ImplementedBy(serviceImplementationType)
+                    .Named(serviceImplementationType.FullName)
                     .LifeStyle.Singleton);
             }
 
@@ -139,19 +159,20 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         }
 
         /// <summary>
-        /// 
+        /// Call-down Castle API to Register a Singleton via Typed Object Instance type using a supplied name
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="serviceInterfaceType"></param>
+        /// <param name="serviceImplementationType"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType, string name)
         {
-            if (!Instance.Kernel.HasComponent(from) &&
+            if (!Instance.IsTypeRegistered(serviceInterfaceType) &&
+                !Instance.IsTypeRegistered(serviceImplementationType) &&
                 !Instance.Kernel.HasComponent(name))
             {
-                Instance.Register(Component.For(from)
-                    .ImplementedBy(to)
+                Instance.Register(Component.For(serviceInterfaceType)
+                    .ImplementedBy(serviceImplementationType)
                     .Named(name)
                     .LifeStyle.Singleton);
             }
@@ -160,26 +181,42 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         }
 
         /// <summary>
-        /// 
+        /// Call-down to the Castle API to Register a Singleton Type via Generics using a supplied name 
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public IContainerRegistry RegisterSingleton<TInterface, TImplementation>(string name) where TImplementation: class
+        public IContainerRegistry RegisterSingleton<TServiceInterface, TServiceImplementation>(string name) where TServiceImplementation: class, TServiceInterface
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("message", nameof(name));
-            }
-
-            if (!Instance.Kernel.HasComponent(typeof(TInterface)) &&
-                !Instance.Kernel.HasComponent(typeof(TImplementation)) &&
+            if (!Instance.IsTypeRegistered<TServiceInterface>() &&
+                !Instance.IsTypeRegistered<TServiceImplementation>() &&
                 !Instance.Kernel.HasComponent(name))
             {
-                Instance.Register(Component.For(typeof(TInterface))
-                                           .ImplementedBy(typeof(TImplementation))
-                                           .Named(name)
-                                           .LifeStyle.Singleton);
+                Instance.RegisterType<TServiceInterface, TServiceImplementation>(name, LifestyleType.Singleton);
             }
+
+            return this;
+        }
+
+        /// <summary>
+        /// This method takes no parameters and will register the TInterfaceService and TServiceImplementation using the Fullname of the of the
+        /// types in the host assembly
+        /// </summary>
+        /// <returns></returns>
+        public IContainerRegistry RegisterSingleton<TServiceInterface, TServiceImplementation>() where TServiceImplementation : class, TServiceInterface
+        {
+            // we pass the true value to create a Singleton instance
+            Instance.RegisterType<TServiceInterface, TServiceImplementation>(true);
+
+            //if (!Instance.Kernel.HasComponent(typeof(TServiceInterface))      &&
+            //    !Instance.Kernel.HasComponent(typeof(TServiceImplementation)) &&
+            //    !Instance.Kernel.HasComponent(typeof(TServiceInterface).FullName) &&
+            //    !Instance.Kernel.HasComponent(typeof(TServiceImplementation).FullName))
+            //{
+            //    Instance.Register(Component.For(typeof(TServiceInterface))
+            //                               .ImplementedBy(typeof(TServiceImplementation))
+            //                               .Named(typeof(TServiceInterface).FullName)
+            //                               .LifeStyle.Singleton);
+            //}
 
             return this;
         }
@@ -187,38 +224,17 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="fromServiceType"></param>
+        /// <param name="toServiceType"></param>
         /// <returns></returns>
-        public IContainerRegistry RegisterSingleton<TInterface, TImplementation>() where TImplementation : class
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType)
         {
-            if (!Instance.Kernel.HasComponent(typeof(TInterface))      &&
-                !Instance.Kernel.HasComponent(typeof(TImplementation)) &&
-                !Instance.Kernel.HasComponent(typeof(TInterface).FullName) &&
-                !Instance.Kernel.HasComponent(typeof(TImplementation).FullName))
+            if (!Instance.Kernel.HasComponent(fromServiceType) &&
+                !Instance.Kernel.HasComponent(toServiceType.FullName))
             {
-                Instance.Register(Component.For(typeof(TInterface))
-                                           .ImplementedBy(typeof(TImplementation))
-                                           .Named(typeof(TInterface).FullName)
-                                           .LifeStyle.Singleton);
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        public IContainerRegistry Register(Type from, Type to)
-        {
-            if (!Instance.Kernel.HasComponent(from) &&
-                !Instance.Kernel.HasComponent(to.FullName))
-            {
-                Instance.Register(Component.For(from)
-                    .ImplementedBy(to)
-                    .Named(to.FullName)
+                Instance.Register(Component.For(fromServiceType)
+                    .ImplementedBy(toServiceType)
+                    .Named(toServiceType.FullName)
                     .LifeStyle.Transient);
             }
 
@@ -228,17 +244,17 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="fromServiceType"></param>
+        /// <param name="toServiceType"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public IContainerRegistry Register(Type from, Type to, string name)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType, string name)
         {
-            if (!Instance.Kernel.HasComponent(from) &&
+            if (!Instance.Kernel.HasComponent(fromServiceType) &&
                 !Instance.Kernel.HasComponent(name))
             {
-                Instance.Register(Component.For(from)
-                    .ImplementedBy(to)
+                Instance.Register(Component.For(fromServiceType)
+                    .ImplementedBy(toServiceType)
                     .Named(name)
                     .LifeStyle.Transient);
             }
@@ -253,7 +269,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public object Resolve(Type type)
         {
-            if (type.IsClass && !Instance.Kernel.HasComponent(type))
+            if (!Instance.Kernel.HasComponent(type))
                 Instance.Register(Component.For(type)
                     .Named(type.FullName)
                     .LifeStyle.Transient);
@@ -269,12 +285,40 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Ioc
         /// <returns></returns>
         public object Resolve(Type type, string name)
         {
-            if (type.IsClass && !Instance.Kernel.HasComponent(type))
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            // Check to see if we can Resolve the type by name
+
+            var typeRegisteredByName = Instance.Kernel.HasComponent(name);
+            var typeRegisteredByType = Instance.Kernel.HasComponent(type);
+
+            // Custom Fix-up logic to resolve registration inconsistency 
+
+            if (typeRegisteredByName && !typeRegisteredByType)
+            {
+                Instance.Register(Component.For(type)
+                    .Named(type.FullName)
+                    .LifeStyle.Transient);
+
+                return Instance.IsTypeRegistered(type) ? Instance.Resolve(type) : Instance.Resolve(name, type);
+            }
+            else if (!typeRegisteredByName && typeRegisteredByType)
+            {
                 Instance.Register(Component.For(type)
                     .Named(name)
                     .LifeStyle.Transient);
 
-            return Instance.Resolve(type, name);
+                return Instance.Kernel.HasComponent(name) ? Instance.Resolve(type, name) : Instance.Resolve(name, type);
+            }
+            else if (!typeRegisteredByName && !typeRegisteredByType)
+            {
+                Instance.Register(Component.For(type)
+                    .Named(type.FullName)
+                    .LifeStyle.Transient);
+                return Instance.Resolve(type);
+            }
+
+            return Instance.Resolve(name, type);
         }
 
         /// <summary>

@@ -70,35 +70,39 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
         /// Registers an object for navigation.
         /// </summary>
         /// <typeparam name="T">The Type of the object to register</typeparam>
-        /// <typeparam name="TClassType"></typeparam>
-        /// <param name="container"><see cref="IUnityContainer"/> used to register type for Navigation.</param>
+        /// <typeparam name="TServiceImplementation"></typeparam>
+        /// <param name="container"><see cref="IWindsorContainer"/> used to register type for Navigation.</param>
         /// <param name="name">The unique name to register with the object.</param>
-        public static IWindsorContainer RegisterTypeForNavigation<TClassType>(this IWindsorContainer container, string name = null) where TClassType : class
+        public static IWindsorContainer RegisterTypeForNavigation<TServiceImplementation>(this IWindsorContainer container, string name = null) where TServiceImplementation : class
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            //return RegisterType<object, TClassType>(container, name);
+            if (!container.IsTypeRegistered<TServiceImplementation>() &&
+                !container.Kernel.HasComponent(name))
+            {
+                return container.Register(Component.For(typeof(TServiceImplementation))
+                    .ImplementedBy(typeof(object))
+                    .Named(typeof(TServiceImplementation).Namespace)
+                    .LifeStyle.Transient);
+            }
 
-            return container.Register(Component.For(typeof(TClassType))
-                .ImplementedBy(typeof(object))
-                .Named(typeof(TClassType).Namespace)
-                .LifeStyle.Transient);
+            return container;
         }
 
         /// <summary>Register a theClassType mapping with the container.</summary>
         /// <remarks>
-        /// This method is used to tell the container that when asked for theClassType <typeparamref name="TServiceType" />,
-        /// actually return an instance of theClassType <typeparamref name="TClassType" />. This is very useful for
+        /// This method is used to tell the container that when asked for theClassType <typeparamref name="TServiceInterface" />,
+        /// actually return an instance of theClassType <typeparamref name="TServiceImplementation" />. This is very useful for
         /// getting instances of interfaces.
         /// </remarks>
-        /// <typeparam name="TServiceType"><see cref="T:System.Type" /> that will be requested.</typeparam>
-        /// <typeparam name="TClassType"><see cref="T:System.Type" /> that will actually be returned.</typeparam>
+        /// <typeparam name="TServiceInterface"><see cref="T:System.Type" /> that will be requested.</typeparam>
+        /// <typeparam name="TServiceImplementation"><see cref="T:System.Type" /> that will actually be returned.</typeparam>
         /// <param name="container">Container to configure.</param>
         /// <param name="name">Name of this mapping.</param>
         /// <param name="theLifestyleType"></param>
         /// <returns>The <see cref="T:Microsoft.Practices.Unity.UnityContainer" /> object that this method was called on (this in C#, Me in Visual Basic).</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "As designed")]
-        public static IWindsorContainer RegisterType<TServiceType, TClassType>(this IWindsorContainer container, string name, LifestyleType theLifestyleType) where TClassType : TServiceType
+        public static IWindsorContainer RegisterType<TServiceInterface, TServiceImplementation>(this IWindsorContainer container, string name, LifestyleType theLifestyleType) where TServiceImplementation : class, TServiceInterface
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
@@ -108,65 +112,72 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
                 throw new InvalidEnumArgumentException(nameof(theLifestyleType), (int)theLifestyleType,
                     typeof(LifestyleType));
 
-            switch (theLifestyleType)
+            if (!container.IsTypeRegistered<TServiceInterface>() &&
+                !container.IsTypeRegistered<TServiceImplementation>() &&
+                !container.Kernel.HasComponent(name))
             {
-                case LifestyleType.Undefined:
-                    return container.Register(Component.For(typeof(TServiceType))
-                        .ImplementedBy(typeof(TClassType))
-                        .Named(name));
-                case LifestyleType.Singleton:
-                    return container.Register(Component.For(typeof(TServiceType))
-                        .ImplementedBy(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Singleton);
-                case LifestyleType.Thread:
-                    return container.Register(Component.For(typeof(TServiceType))
-                        .ImplementedBy(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.PerThread);
-                case LifestyleType.Transient:
-                    return container.Register(Component.For(typeof(TServiceType))
-                        .ImplementedBy(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Transient);
-                case LifestyleType.Pooled:
-                    return container.Register(Component.For(typeof(TServiceType))
-                        .ImplementedBy(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Pooled);
-                case LifestyleType.Custom:
-                    break;
-                case LifestyleType.Scoped:
-                    return container.Register(Component.For(typeof(TServiceType))
-                        .ImplementedBy(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Scoped(typeof(TClassType)));
-                case LifestyleType.Bound:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(theLifestyleType), theLifestyleType, null);
+                switch (theLifestyleType)
+                {
+                    case LifestyleType.Undefined:
+                        return container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(name));
+                    case LifestyleType.Singleton:
+                        return container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Singleton);
+                    case LifestyleType.Thread:
+                        return container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.PerThread);
+                    case LifestyleType.Transient:
+                        return container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Transient);
+                    case LifestyleType.Pooled:
+                        return container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Pooled);
+                    case LifestyleType.Custom:
+                        break;
+                    case LifestyleType.Scoped:
+                        return container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Scoped(typeof(TServiceImplementation)));
+                    case LifestyleType.Bound:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(theLifestyleType), theLifestyleType, null);
+                }
+
+                return container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Transient);
             }
 
-            return container.Register(Component.For(typeof(TServiceType))
-                        .ImplementedBy(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Transient);
+            return container;
         }
 
         /// <summary>Register a theClassType mapping with the container.</summary>
         /// <remarks>
         /// This method is used to tell the container that when asked for theClassType <typeparamref name="TFrom" />,
-        /// actually return an instance of theClassType <typeparamref name="TClassType" />. This is very useful for
+        /// actually return an instance of theClassType <typeparamref name="TServiceImplementation" />. This is very useful for
         /// getting instances of interfaces.
         /// </remarks>
         /// <typeparam name="TFrom"><see cref="T:System.Type" /> that will be requested.</typeparam>
-        /// <typeparam name="TClassType"><see cref="T:System.Type" /> that will actually be returned.</typeparam>
+        /// <typeparam name="TServiceImplementation"><see cref="T:System.Type" /> that will actually be returned.</typeparam>
         /// <param name="container">Container to configure.</param>
         /// <param name="name">Name of this mapping.</param>
         /// <param name="theLifestyleType"></param>
         /// <returns>The <see cref="T:Microsoft.Practices.Unity.UnityContainer" /> object that this method was called on (this in C#, Me in Visual Basic).</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "As designed")]
-        public static IWindsorContainer RegisterType<TClassType>(this IWindsorContainer container, string name, LifestyleType theLifestyleType) where TClassType : class
+        public static IWindsorContainer RegisterType<TServiceImplementation>(this IWindsorContainer container, string name, LifestyleType theLifestyleType) where TServiceImplementation : class
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
@@ -176,42 +187,48 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
                 throw new InvalidEnumArgumentException(nameof(theLifestyleType), (int)theLifestyleType,
                     typeof(LifestyleType));
 
-            switch (theLifestyleType)
+            if (!container.IsTypeRegistered<TServiceImplementation>() &&
+                !container.Kernel.HasComponent(name))
             {
-                case LifestyleType.Undefined:
-                    return container.Register(Component.For(typeof(TClassType))
-                        .Named(name));
-                case LifestyleType.Singleton:
-                    return container.Register(Component.For(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Singleton);
-                case LifestyleType.Thread:
-                    return container.Register(Component.For(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.PerThread);
-                case LifestyleType.Transient:
-                    return container.Register(Component.For(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Transient);
-                case LifestyleType.Pooled:
-                    return container.Register(Component.For(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Pooled);
-                case LifestyleType.Custom:
-                    break;
-                case LifestyleType.Scoped:
-                    return container.Register(Component.For(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Scoped(typeof(TClassType)));
-                case LifestyleType.Bound:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(theLifestyleType), theLifestyleType, null);
+                switch (theLifestyleType)
+                {
+                    case LifestyleType.Undefined:
+                        return container.Register(Component.For(typeof(TServiceImplementation))
+                            .Named(name));
+                    case LifestyleType.Singleton:
+                        return container.Register(Component.For(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Singleton);
+                    case LifestyleType.Thread:
+                        return container.Register(Component.For(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.PerThread);
+                    case LifestyleType.Transient:
+                        return container.Register(Component.For(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Transient);
+                    case LifestyleType.Pooled:
+                        return container.Register(Component.For(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Pooled);
+                    case LifestyleType.Custom:
+                        break;
+                    case LifestyleType.Scoped:
+                        return container.Register(Component.For(typeof(TServiceImplementation))
+                            .Named(name)
+                            .LifeStyle.Scoped(typeof(TServiceImplementation)));
+                    case LifestyleType.Bound:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(theLifestyleType), theLifestyleType, null);
+                }
+
+                return container.Register(Component.For(typeof(TServiceImplementation))
+                    .Named(name)
+                    .LifeStyle.Transient);
             }
 
-            return container.Register(Component.For(typeof(TClassType))
-                        .Named(name)
-                        .LifeStyle.Transient);
+            return container;
         }
 
         /// <summary>
@@ -219,79 +236,92 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
         /// first registers it with transient lifestyle.
         /// </summary>
         /// <param name="container"></param>
-        /// <param name="theClassType"></param>
-        /// <param name="theUIViewName"></param>
+        /// <param name="theServiceImplementationType"></param>
+        /// <param name="serviceTypeName"></param>
         /// <returns></returns>
-        public static object Resolve(this IWindsorContainer container, Type theClassType, string theUIViewName)
+        public static object Resolve(this IWindsorContainer container, Type theServiceImplementationType, string serviceTypeName)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
-            if (theClassType.IsClass && !container.Kernel.HasComponent(theClassType))
-                container.Register(Component.For(theClassType).Named(theClassType.FullName).LifeStyle.Transient);
+            if (!container.Kernel.HasComponent(theServiceImplementationType)) // &&
+                //!container.Kernel.HasComponent(serviceTypeName))
+                container.Register(Component.For(theServiceImplementationType)
+                    .Named(theServiceImplementationType.FullName)
+                    .LifeStyle.Transient);
 
-            if (string.IsNullOrWhiteSpace(theUIViewName))
+            if (string.IsNullOrWhiteSpace(serviceTypeName))
             {
-                throw new ArgumentException("message", nameof(theUIViewName));
+                throw new ArgumentException("message", nameof(serviceTypeName));
             }
 
-            return container.Resolve(theClassType);
+            return container.Resolve(theServiceImplementationType);
         }
 
         /// <summary>
         /// Registers the theClassType on the container.
         /// </summary>
-        /// <typeparam name="TServiceType">The theClassType of the interface.</typeparam>
-        /// <typeparam name="TClassType">The theClassType of the service.</typeparam>
+        /// <typeparam name="TServiceInterface">The theClassType of the interface.</typeparam>
+        /// <typeparam name="TServiceImplementation">The theClassType of the service.</typeparam>
         /// <param name="container">The container.</param>
-        public static void RegisterType<TServiceType, TClassType>(this IWindsorContainer container)
+        public static void RegisterType<TServiceInterface, TServiceImplementation>(this IWindsorContainer container)
         {
-            var serviceObject = container.TryResolve<TClassType>();
-            if (serviceObject == null)
-                RegisterType<TServiceType, TClassType>(container, true);
+            var serviceImplementationObject = container.TryResolve<TServiceImplementation>();
+            var serviceInterfaceObject      = container.TryResolve<TServiceInterface>();
+
+            if (serviceImplementationObject == null &&
+                serviceInterfaceObject == null)
+                RegisterType<TServiceInterface, TServiceImplementation>(container, true);
         }
 
         /// <summary>
         /// Registers the theClassType on the container.
         /// </summary>
-        /// <typeparam name="TServiceType">The theClassType of interface.</typeparam>
-        /// <typeparam name="TClassType">The theClassType of the service.</typeparam>
+        /// <typeparam name="TServiceInterface">The theClassType of interface.</typeparam>
+        /// <typeparam name="TServiceImplementation">The theClassType of the service.</typeparam>
         /// <param name="container">The container.</param>
         /// <param name="singleton">if set to <c>true</c> theClassType will be registered as singleton.</param>
-        public static void RegisterType<TServiceType, TClassType>(this IWindsorContainer container, bool singleton)
+        public static void RegisterType<TServiceInterface, TServiceImplementation>(this IWindsorContainer container, bool singleton)
         {
-            var t = container.Kernel.HasComponent(typeof(TServiceType).FullName);
+            var serviceInterfaceTypeRegistered      = container.Kernel.HasComponent(typeof(TServiceInterface).FullName);
+            var serviceImplementationTypeRegistered = container.Kernel.HasComponent(typeof(TServiceImplementation).FullName);
 
-            if (container.Kernel.HasComponent(typeof(TServiceType))) return;
-
-            var serviceType = container.TryResolve(typeof(TServiceType));
-
-            switch (serviceType)
+            if (!serviceInterfaceTypeRegistered && !serviceImplementationTypeRegistered)
             {
-                case null when singleton == false:
-                    container.Register(Component.For(typeof(TServiceType))
-                                                .ImplementedBy(typeof(TClassType))
-                                                .LifeStyle.Transient);
-                    break;
-                case null when true:
-                    container.Register(Component.For(typeof(TServiceType))
-                                                .ImplementedBy(typeof(TClassType))
-                                                .LifeStyle.Singleton);
-                    break;
+                //var serviceType = container.TryResolve(typeof(TServiceInterface));
+
+                switch (singleton)
+                {
+                    case true:
+                        container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(typeof(TServiceImplementation).FullName)
+                            .LifeStyle.Singleton);
+                        break;
+                    default:
+                        container.Register(Component.For(typeof(TServiceInterface))
+                            .ImplementedBy(typeof(TServiceImplementation))
+                            .Named(typeof(TServiceImplementation).FullName)
+                            .LifeStyle.Transient);
+                        break;
+                }
             }
         }
 
         /// <summary>
-        /// 
+        /// Basic function for Resolve 
         /// </summary>
         /// <param name="windsorContainer"></param>
-        /// <param name="serviceType"></param>
+        /// <param name="serviceImplementationType"></param>
         /// <returns></returns>
-        internal static object Resolve(IWindsorContainer windsorContainer, Type serviceType)
+        internal static object Resolve(IWindsorContainer windsorContainer, Type serviceImplementationType)
         {
-            if (serviceType.IsClass && !windsorContainer.Kernel.HasComponent(serviceType))
-                windsorContainer.Register(Component.For(serviceType).Named(serviceType.FullName).LifeStyle.Transient);
+            if (serviceImplementationType.IsClass && 
+                !windsorContainer.Kernel.HasComponent(serviceImplementationType))
+                windsorContainer.Register(Component.For(serviceImplementationType)
+                    .Named(serviceImplementationType.FullName)
+                    .LifeStyle.Transient);
 
-            return windsorContainer.Resolve(serviceType);
+            return windsorContainer.Resolve(serviceImplementationType);
         }
     }
 }

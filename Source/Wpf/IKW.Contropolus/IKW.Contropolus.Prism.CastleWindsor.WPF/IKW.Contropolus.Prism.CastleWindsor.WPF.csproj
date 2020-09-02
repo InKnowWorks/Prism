@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;net47;netcoreapp3.1</TargetFrameworks>
+    <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
+    <EmbedAllSources>true</EmbedAllSources>
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -12,7 +14,12 @@
     <Description>IKW Customized IoC for Prism 7.x Famework - Contropolus</Description>
     <PackageTags>prism;castlewindsor;mvvm;wpf;xaml</PackageTags>
     <Version Condition=" '$(PRISM_UNITY_WPF_VERSION)' != '' ">$(PRISM_UNITY_WPF_VERSION)</Version>
-    <Version>8.1.0</Version>
+    <Version>8.2.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

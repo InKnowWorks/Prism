@@ -3,6 +3,9 @@ using System;
 
 namespace Prism.Ioc
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class IContainerRegistryExtensions
     {
         /// <summary>

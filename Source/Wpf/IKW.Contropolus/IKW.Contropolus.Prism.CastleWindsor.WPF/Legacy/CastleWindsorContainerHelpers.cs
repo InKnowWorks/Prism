@@ -22,22 +22,29 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
             return container.Kernel.HasComponent(type);
         }
 
-        public static bool IsTypeRegistered<TType>(this IWindsorContainer container)
+        /// <summary>
+        /// Extension method to act on the object accessible via this point variable
+        /// </summary>
+        /// <param name="container"></param>
+        /// <typeparam name="TServiceType"></typeparam>
+        /// <returns></returns>
+        public static bool IsTypeRegistered<TServiceType>(this IWindsorContainer container)
         {
-            Type typeToCheck = typeof(TType);
+            Type typeToCheck = typeof(TServiceType);
             return IsTypeRegistered(container, typeToCheck);
         }
 
         /// <summary>
         /// Utility method to try to resolve a service from the container avoiding an exception if the container cannot build the theClassType.
         /// </summary>
-        /// <param name="container">The cointainer that will be used to resolve the theClassType.</param>
+        /// <param name="container">The container that will be used to resolve the theClassType.</param>
         /// <typeparam name="T">The theClassType to resolve.</typeparam>
         /// <returns>The instance of <typeparamref name="T"/> built up by the container.</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public static T TryResolve<T>(this IWindsorContainer container)
         {
             object result = TryResolve(container, typeof(T));
+
             if (result != null)
             {
                 return (T)result;
@@ -52,7 +59,7 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
         /// <param name="typeToResolve">The theClassType to resolve.</param>
         /// <returns>The instance of <paramref name="typeToResolve"/> built up by the container.</returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public static object TryResolve(this IWindsorContainer container, Type typeToResolve)
+        private static object TryResolve(this IWindsorContainer container, Type typeToResolve)
         {
             object resolved;
 

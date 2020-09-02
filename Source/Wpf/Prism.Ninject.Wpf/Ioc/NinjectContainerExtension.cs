@@ -32,27 +32,27 @@ namespace Prism.Ninject.Ioc
             return this;
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType)
         {
-            Instance.Bind(from).To(to).InSingletonScope();
+            Instance.Bind(serviceInterfaceType).To(serviceImplementationType).InSingletonScope();
             return this;
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType, string name)
         {
-            Instance.Bind(from).To(to).InSingletonScope().Named(name);
+            Instance.Bind(serviceInterfaceType).To(serviceImplementationType).InSingletonScope().Named(name);
             return this;
         }
 
-        public IContainerRegistry Register(Type from, Type to)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType)
         {
-            Instance.Bind(from).To(to).InTransientScope();
+            Instance.Bind(fromServiceType).To(toServiceType).InTransientScope();
             return this;
         }
 
-        public IContainerRegistry Register(Type from, Type to, string name)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType, string name)
         {
-            Instance.Bind(from).To(to).InTransientScope().Named(name);
+            Instance.Bind(fromServiceType).To(toServiceType).InTransientScope().Named(name);
             return this;
         }
 

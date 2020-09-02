@@ -28,27 +28,27 @@ namespace Prism.Unity.Ioc
             return this;
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType)
         {
-            Instance.RegisterSingleton(from, to);
+            Instance.RegisterSingleton(serviceInterfaceType, serviceImplementationType);
             return this;
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType, string name)
         {
-            Instance.RegisterSingleton(from, to, name);
+            Instance.RegisterSingleton(serviceInterfaceType, serviceImplementationType, name);
             return this;
         }
 
-        public IContainerRegistry Register(Type from, Type to)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType)
         {
-            Instance.RegisterType(from, to);
+            Instance.RegisterType(fromServiceType, toServiceType);
             return this;
         }
 
-        public IContainerRegistry Register(Type from, Type to, string name)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType, string name)
         {
-            Instance.RegisterType(from, to, name);
+            Instance.RegisterType(fromServiceType, toServiceType, name);
             return this;
         }
 

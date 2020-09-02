@@ -23,12 +23,12 @@ namespace Prism.Wpf.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public IContainerRegistry Register(Type from, Type to)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType)
         {
             throw new NotImplementedException();
         }
 
-        public IContainerRegistry Register(Type from, Type to, string name)
+        public IContainerRegistry Register(Type fromServiceType, Type toServiceType, string name)
         {
             throw new NotImplementedException();
         }
@@ -43,12 +43,12 @@ namespace Prism.Wpf.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType)
         {
             throw new NotImplementedException();
         }
 
-        public IContainerRegistry RegisterSingleton(Type from, Type to, string name)
+        public IContainerRegistry RegisterSingleton(Type serviceInterfaceType, Type serviceImplementationType, string name)
         {
             throw new NotImplementedException();
         }
