@@ -9,15 +9,30 @@ using System.Threading.Tasks;
 
 namespace Prism.DryIoc.Regions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DryIocRegionNavigationContentLoader : RegionNavigationContentLoader
     {
         private readonly IContainer _container;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceLocator"></param>
+        /// <param name="container"></param>
         public DryIocRegionNavigationContentLoader(IServiceLocator serviceLocator, IContainer container) : base(serviceLocator)
         {
             _container = container;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="candidateNavigationContract"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         protected override IEnumerable<object> GetCandidatesFromRegion(IRegion region, string candidateNavigationContract)
         {
             if (candidateNavigationContract == null || candidateNavigationContract.Equals(string.Empty))
@@ -25,11 +40,13 @@ namespace Prism.DryIoc.Regions
 
             IEnumerable<object> contractCandidates = base.GetCandidatesFromRegion(region, candidateNavigationContract);
 
-            if (!contractCandidates.Any())
+            var candidatesFromRegion = contractCandidates as object[] ?? contractCandidates.ToArray();
+
+            if (!candidatesFromRegion.Any())
             {
-                var matchingRegistration = _container.GetServiceRegistrations().Where(r => candidateNavigationContract.Equals(r.OptionalServiceKey?.ToString(), StringComparison.Ordinal)).FirstOrDefault();
+                var matchingRegistration = _container.GetServiceRegistrations().FirstOrDefault(r => candidateNavigationContract.Equals(r.OptionalServiceKey?.ToString(), StringComparison.Ordinal));
                 if (matchingRegistration.OptionalServiceKey == null)
-                    matchingRegistration = _container.GetServiceRegistrations().Where(r => candidateNavigationContract.Equals(r.ImplementationType.Name, StringComparison.Ordinal)).FirstOrDefault();
+                    matchingRegistration = _container.GetServiceRegistrations().FirstOrDefault(r => candidateNavigationContract.Equals(r.ImplementationType.Name, StringComparison.Ordinal));
 
                 if (matchingRegistration.ServiceType == null) 
                     return new object[0];
@@ -38,7 +55,7 @@ namespace Prism.DryIoc.Regions
                 contractCandidates = base.GetCandidatesFromRegion(region, typeCandidateName);
             }
 
-            return contractCandidates;
+            return candidatesFromRegion;
         }
     }
 }
