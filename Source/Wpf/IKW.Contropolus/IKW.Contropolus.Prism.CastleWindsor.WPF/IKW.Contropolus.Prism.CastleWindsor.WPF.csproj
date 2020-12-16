@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net47;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net461;net47;net48;netcoreapp3.1</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="Castle.Windsor" Version="5.0.1" />
+    <PackageReference Include="Castle.Windsor" Version="5.1.1" />
     <PackageReference Include="CommonServiceLocator" Version="2.0.5" />
   </ItemGroup>
 
