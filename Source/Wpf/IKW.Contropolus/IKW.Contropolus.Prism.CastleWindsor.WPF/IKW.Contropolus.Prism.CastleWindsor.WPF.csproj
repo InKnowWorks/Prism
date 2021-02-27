@@ -22,10 +22,22 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="Castle.Windsor" Version="5.0.1" />
-    <PackageReference Include="CommonServiceLocator" Version="2.0.5" />
+    <PackageReference Include="Castle.Windsor" Version="5.1.1" />
+    <PackageReference Include="CommonServiceLocator" Version="2.0.6" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,6 +23,20 @@ namespace IKW.Contropolus.Prism.CastleWindsor.WPF.Legacy
         }
 
         /// <summary>
+        /// Returns whether a specified theClassType has a theClassType mapping registered in the container.
+        /// </summary>
+        /// <param name="container">The <see cref="IWindsorContainer"/> to check for the theClassType mapping.</param>
+        /// <param name="type">The theClassType to check if there is a theClassType mapping for.</param>
+        /// <param name="name"></param>
+        /// <returns><see langword="true"/> if there is a theClassType mapping registered for <paramref name="type"/>.</returns>
+        /// <remarks>In order to use this extension method, you first need to add the
+        /// </remarks>
+        public static bool IsTypeRegistered(this IWindsorContainer container, Type type, string name)
+        {
+            return container.Kernel.HasComponent(name) && container.Kernel.HasComponent(type);
+        }
+
+        /// <summary>
         /// Extension method to act on the object accessible via this point variable
         /// </summary>
         /// <param name="container"></param>
